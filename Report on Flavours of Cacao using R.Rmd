@@ -1,0 +1,87 @@
+---
+title: "A project Report on Chocolate and Tea, an up-and-coming chain of cafes."
+author: "Shuvam Anupam"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
+## Project Scenario
+
+Chocolate and Tea unit, aims to serve chocolate bars that are highly rated by professional critics. They also continually adjust the menu to make sure it reflects the global diversity of chocolate production. The management team regularly updates the chocolate bar list in order to align with the latest ratings and to ensure that the list contains bars from a variety of countries. 
+The project work is to collect and analyze data on the latest chocolate ratings. In particular, to know which countries produce the highest-rated bars of super dark chocolate (a high percentage of cocoa). This data will help company to create their next chocolate bar menu.
+Dataset used from kaggle.com, it is organished,filtered and sorted by Shuvam Anupam.
+
+```{r loading libraries, echo=FALSE, message=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+```
+Loading the dataset assigning a dataframe
+```{r load data}
+flavours_df <- read_csv("flavours_of_cacao_v2.csv")
+```
+Data Previewing and cleaning
+```{r}
+colnames(flavours_df)
+str(flavours_df)
+```
+Removing the missing Values from the Dataset
+```{r}
+na.omit(flavours_df)
+```
+
+Main focus is on Rating,Percent_of_cocoa,location and Company.By using the select() function to create a new data frame with only these four variables.
+```{r}
+trimmed_flavours_df <- flavours_df %>% 
+  select(Rating,Percent_of_cocoa,Company,Location)
+print(trimmed_flavours_df)
+```
+
+selecting the basic statistics that can help team better understand the ratings system in your data.
+Adding the code chunk that lets you find the standard deviation for the variable Rating.
+```{r}
+trimmed_flavours_df %>% 
+  summarize(sd(Rating))
+```
+
+Chocolate and Tea considers a bar to be super dark chocolate if the bar's cocoa percent is greater than or equal to 75%.Also determine that any rating greater than or equal to 3.7 points can be considered a high rating. Nnow creating a new data frame to find out which chocolate bars meet these two conditions.
+```{r}
+best_trimmed_flavours_df <- trimmed_flavours_df %>% 
+  filter(Percent_of_cocoa >= 75, Rating >= 3.7)
+print(best_trimmed_flavours_df)
+```
+
+Used the geom_bar() function to create a bar chart. Adding the code chunk that creates a bar chart with the variable Company Location on the x-axis.
+```{r}
+ggplot(data = best_trimmed_flavours_df) + geom_bar(mapping = aes(x=Location, fill = factor(Rating))) +
+  theme(axis.text.x = element_text(angle = 45))+
+  labs(title = "Comparision of chocolate location by Ratings")
+```
+
+Used the geom_bar() function created a bar chart on percent_of_cocoa and  wrap around facets of the variable Cocoa Percent and Location.
+```{r}
+ggplot(data = best_trimmed_flavours_df)+ geom_bar(mapping = aes(x=Percent_of_cocoa,fill = Location))+
+  facet_wrap(~Percent_of_cocoa~Rating)+
+  labs(title = "Comparision of percent_of_cocoa by Location and Rating in best cocoa flavours")
+```
+
+## Conclusion
+
+According to the above Analysis the insights shown above as under:-
+
+France,Italy and Sao Tome produces best rating flavours of cocoa 
+France topped the chart in both the Rating and percent_of_cocoa
+These are the insights asked by the unit..
+                                           
+                                           ***End Of The Report***
+
+
+
+
+
+
+
+
+ 
